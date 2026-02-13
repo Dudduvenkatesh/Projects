@@ -1,0 +1,72 @@
+SonarQube – Jenkins pipeline script 
+pipeline {
+    agent any
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'githubt-token', url: 'https://github.com/Davidgit526/Admin-Retail-Application.git'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("sonar") {
+                    sh """
+                        ${SCANNER_HOME}/bin/sonar-scanner \\
+                          -Dsonar.projectKey=Retail-app-code-quality \\
+                          -Dsonar.projectName=Retail-app-code-quality
+                    """
+                }
+            }
+        }
+
+    }
+
+    post {
+        success {
+            emailext (
+                subject: "SUCCESS: SonarQube Quality Gate Passed",
+                body: """
+                Hi Team,
+                
+                The SonarQube quality gate passed successfully.
+
+                You can view the report here:
+                http://44.227.100.103:9000/dashboard?id=Clahan-app-code-quality
+                username: admin, passwd: pass
+
+                If you want to download a PDF report, please use the SonarQube interface or a PDF plugin.
+
+                Regards,
+                Jenkins
+                """,
+                to: 'muraliclahan526@gmail.com'
+            )
+        }
+        failure {
+            emailext (
+                subject: "FAILED: SonarQube Quality Gate",
+                body: """
+                Hi Team,
+                
+                The SonarQube quality gate has failed.
+                
+                Please check the details:
+                http://44.227.100.103:9000/dashboard?id=Clahan-app-code-quality
+                username: admin, passwd: pass
+                
+                Regards,
+                Jenkins
+                """,
+                to: 'muraliclahan526@gmail.com'
+            )
+        }
+    }
+}
+
+
+
