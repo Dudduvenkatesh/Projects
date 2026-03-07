@@ -106,3 +106,17 @@ sudo systemctl start sonar
  
 #Check the status of the  sonar service 
 sudo systemctl status sonar
+
+
+docker run -d --name sonar -p 9000:9000 sonarqube:community
+
+sudo docker pull jenkins/jenkins:lts
+
+sudo docker run -d \
+ -p 8080:8080 \
+ -p 50000:50000 \
+ --name jenkins \
+ -v jenkins_home:/var/jenkins_home \
+ jenkins/jenkins:lts
+
+sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
