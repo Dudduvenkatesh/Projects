@@ -25,3 +25,7 @@ CI:- GitHub actions
 CD:- ArgoCD
 
 Argocd:- it is a gitops tool
+
+
+eksctl delete cluster --name venky-cluster --region us-west-2
+
