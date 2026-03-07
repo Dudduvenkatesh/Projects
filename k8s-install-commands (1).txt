@@ -36,3 +36,7 @@ sudo ./aws/install
 
 
 eksctl create cluster --name venky-cluster --region us-west-2 --zones us-west-2a,us-west-2b --nodegroup-name k8s-ng --node-type t3.medium --nodes 2
+
+
+eksctl delete cluster --name venky-cluster --region us-west-2
+
