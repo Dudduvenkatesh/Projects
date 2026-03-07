@@ -1,0 +1,72 @@
+# for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+ARCH=amd64
+PLATFORM=$(uname -s)_$ARCH
+
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+
+
+curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check
+
+tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+
+sudo mv /tmp/eksctl /usr/local/bin
+
+
+curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+
+
+curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256
+
+
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum –check
+
+
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
+kubectl version --client
+
+
+apt install unzip -y
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+
+aws –version
+
+
+eksctl create cluster --name <cluster_name>  --region <your_region>  --zones <availability_zones>  --nodegroup-name <nodegroip_name>  --node-type <instance_type> --nodes <no.of.nodes>
+
+
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre
+java -version
+
+
+sudo systemctl enable jenkins
+sudo systemctl start Jenkins
+sudo systemctl status Jenkins
+
+
+aws eks update-kubeconfig --name <cluster-name> --region <region>
+
+
+sudo mkdir -p /home/jenkins/.kube
+sudo cp /root/.kube/config /home/jenkins/.kube/config
+sudo chown -R jenkins:jenkins /home/jenkins/.kube
+sudo su - jenkins
+aws configure (provide access keys on Jenkins server)
+
+
+
+
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install Jenkins
+
+
